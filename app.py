@@ -80,10 +80,29 @@ if 'hint_level' not in st.session_state:
     st.session_state.hint_level = {}
 
 # -----------------------------------------------------------------------------
-# 3. 사이드바 메뉴 구성
+# 3. 사이드바 메뉴 및 API 키 설정
 # -----------------------------------------------------------------------------
 st.sidebar.title("📐 삼각함수 마스터")
 st.sidebar.caption("2022 개정 교육과정 [대수]")
+
+# API 키 가져오기 (환경 변수 / Secrets / 사용자 직접 입력 지원)
+env_api_key = os.getenv("GEMINI_API_KEY") or st.secrets.get("GEMINI_API_KEY", "")
+
+st.sidebar.markdown("---")
+st.sidebar.subheader("🔑 Gemini API 설정")
+user_api_key = st.sidebar.text_input(
+    "API Key 입력",
+    value=env_api_key,
+    type="password",
+    help="Google AI Studio에서 발급받은 API 키를 입력하세요."
+)
+
+if user_api_key:
+    st.sidebar.success("✅ API 키가 설정되었습니다.")
+else:
+    st.sidebar.warning("⚠️ 7번 메뉴(AI 풀이) 이용 시 API 키가 필요합니다.")
+
+st.sidebar.markdown("---")
 
 menu = st.sidebar.radio(
     "이동할 메뉴를 선택하세요:",
@@ -560,15 +579,15 @@ elif menu == "7. 삼각함수 도우미 🤖":
             user_prompt = st.text_input("질문 내용 (예: 이 문제 풀이 과정과 정답 알려줘):", value="이 삼각함수 문제의 단계별 풀이 과정과 정답을 학생 눈높이에 맞게 쉽게 설명해줘.")
 
             if st.button("✨ AI에게 풀이 요청하기", type="primary"):
-                api_key = os.getenv("GEMINI_API_KEY")
+                # 사용자가 입력한 API Key 또는 환경 변수 사용
+                api_key_to_use = user_api_key.strip()
                 
-                if not api_key:
-                    st.warning("🔑 `GEMINI_API_KEY` 환경 변수가 설정되어 있지 않습니다. Streamlit Secrets에 API 키를 등록하면 AI 실시간 분석을 사용할 수 있습니다.")
-                    st.info("💡 **가상 풀이 결과 예시**: 이미지에서 문제를 인식했습니다. 주어진 그래프의 진폭 $A=2$, 주기 $T=\\pi$ 이므로 $B=2$ 가 됩니다.")
+                if not api_key_to_use:
+                    st.error("🔑 API 키가 설정되지 않았습니다! 왼쪽 사이드바에서 Gemini API Key를 입력해주세요.")
                 else:
                     try:
                         from google import genai
-                        client = genai.Client(api_key=api_key)
+                        client = genai.Client(api_key=api_key_to_use)
                         
                         with st.spinner("🔍 AI가 문제를 분석하고 해설을 작성 중입니다..."):
                             response = client.models.generate_content(
@@ -578,4 +597,5 @@ elif menu == "7. 삼각함수 도우미 🤖":
                             st.markdown("### 📝 AI 풀이 결과")
                             st.write(response.text)
                     except Exception as e:
-                        st.error(f"오류가 발생했습니다: {e}")
+                        st.error(f"❌ AI 분석 중 오류가 발생했습니다: {e}")
+                        st.info("💡 입력하신 API 키가 유효한지 또는 사용량이 초과되지 않았는지 확인해보세요.")
