@@ -1,12 +1,14 @@
 import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
+from PIL import Image
+import os
 
 # -----------------------------------------------------------------------------
 # 1. 페이지 설정 및 디자인 CSS
 # -----------------------------------------------------------------------------
 st.set_page_config(
-    page_title="공통수학1 - 대수 마스터 LAB",
+    page_title="고등 수학 [대수] - 삼각함수 마스터 LAB",
     page_icon="📐",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -80,19 +82,19 @@ if 'hint_level' not in st.session_state:
 # -----------------------------------------------------------------------------
 # 3. 사이드바 메뉴 구성
 # -----------------------------------------------------------------------------
-st.sidebar.title("📐 대수 마스터")
-st.sidebar.caption("2022 개정 교육과정 공통수학1")
+st.sidebar.title("📐 삼각함수 마스터")
+st.sidebar.caption("2022 개정 교육과정 [대수]")
 
 menu = st.sidebar.radio(
     "이동할 메뉴를 선택하세요:",
     [
-        "1. 대수 시작하기 🎠",
+        "1. 삼각함수 시작하기 🎠",
         "2. 개념 학습 📖",
         "3. 그래프 실험실 🔬",
         "4. 인터랙티브 그래프 퀴즈 🎯",
         "5. 문제 풀기 📝",
         "6. 오답 / 복습 노트 📓",
-        "7. 대수 개념 도우미 🤖"
+        "7. 삼각함수 도우미 🤖"
     ]
 )
 
@@ -102,18 +104,18 @@ st.sidebar.write(f"- 풀이 맞춘 문제 수: **{st.session_state.quiz_score} �
 st.sidebar.write(f"- 오답 노트 항목: **{len(st.session_state.wrong_answers)} 개**")
 
 # -----------------------------------------------------------------------------
-# MENU 1: 대수 시작하기
+# MENU 1: 삼각함수 시작하기
 # -----------------------------------------------------------------------------
-if menu == "1. 대수 시작하기 🎠":
-    st.markdown("<div class='main-header'>🎠 대수와 함수, 도대체 왜 배울까?</div>", unsafe_allow_html=True)
-    st.markdown("<div class='sub-header'>일상 속의 '반복되는 회전 및 주기적 운동'에서 시작하는 대수 및 함수 개념</div>", unsafe_allow_html=True)
+if menu == "1. 삼각함수 시작하기 🎠":
+    st.markdown("<div class='main-header'>🎠 삼각함수, 도대체 왜 배울까?</div>", unsafe_allow_html=True)
+    st.markdown("<div class='sub-header'>일상 속의 '반복되는 회전 운동'에서 시작하는 [대수] 삼각함수 개념</div>", unsafe_allow_html=True)
 
     st.markdown("""
     <div class='card'>
         <h3>🎡 회전목마의 높이는 시간에 따라 어떻게 변할까?</h3>
         <p>놀이공원에서 회전목마를 타고 일정한 속도로 빙글빙글 돌고 있다고 생각해보세요.<br>
         나의 <b>위치(높이)</b>는 시간에 따라 오르락내리락 일정하게 반복됩니다.<br>
-        이런 <b>반복되는 원운동을 수학적인 식과 그래프로 매끄럽게 표현해 주는 도구</b>가 바로 <b>대수의 삼각함수</b>입니다!</p>
+        이런 <b>반복되는 원운동을 수학적으로 매끄럽게 표현해 주는 도구</b>가 바로 <b>삼각함수</b>입니다!</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -155,7 +157,7 @@ if menu == "1. 대수 시작하기 🎠":
 # MENU 2: 개념 학습
 # -----------------------------------------------------------------------------
 elif menu == "2. 개념 학습 📖":
-    st.markdown("<div class='main-header'>📖 대수 기초 개념 Master</div>", unsafe_allow_html=True)
+    st.markdown("<div class='main-header'>📖 [대수] 삼각함수 기초 개념 Master</div>", unsafe_allow_html=True)
 
     tab1, tab2 = st.tabs(["STEP 1. 각과 호도법 (Radian)", "STEP 2. 단위원과 삼각함수의 정의"])
 
@@ -198,7 +200,7 @@ elif menu == "2. 개념 학습 📖":
             st.plotly_chart(fig_rad, use_container_width=True)
 
     with tab2:
-        st.subheader("2️⃣ 단위원(Unit Circle) 위에서 함수 정의")
+        st.subheader("2️⃣ 단위원(Unit Circle) 위에서 삼각함수의 정의")
         st.markdown("""
         반지름이 1인 원(단위원) 위에서 동경(각도)이 나타내는 점 $P(x, y)$가 있을 때:
         - **$\cos \theta = x$ 좌표** (가로 위치)
@@ -228,7 +230,7 @@ elif menu == "2. 개념 학습 📖":
         with c2:
             st.markdown(f"""
             <div class='card'>
-                <h4>📍 각도 $\theta = {angle}^\circ$ 일 때 함숫값</h4>
+                <h4>📍 각도 $\theta = {angle}^\circ$ 일 때 삼각함수 값</h4>
                 <p>🔹 <b>$\cos({angle}^\circ)$</b> (x좌표) = <span style='color:blue; font-weight:bold;'>{x_pt:.4f}</span></p>
                 <p>🔹 <b>$\sin({angle}^\circ)$</b> (y좌표) = <span style='color:red; font-weight:bold;'>{y_pt:.4f}</span></p>
                 <p>🔹 <b>$\tan({angle}^\circ)$</b> (기울기) = <span style='color:green; font-weight:bold;'>{np.tan(rad_a):.4f}</span> (단, 90°, 270°는 정의되지 않음)</p>
@@ -241,10 +243,10 @@ elif menu == "2. 개념 학습 📖":
 # MENU 3: 그래프 실험실
 # -----------------------------------------------------------------------------
 elif menu == "3. 그래프 실험실 🔬":
-    st.markdown("<div class='main-header'>🔬 대수 함수 그래프 실험실</div>", unsafe_allow_html=True)
+    st.markdown("<div class='main-header'>🔬 삼각함수 그래프 실험실</div>", unsafe_allow_html=True)
     st.markdown("<div class='sub-header'>$y = A \\sin(Bx + C) + D$ 변수 계수를 직접 움직이며 그래프의 변화를 관찰하세요.</div>", unsafe_allow_html=True)
 
-    func_type = st.radio("기본 함수 선택:", ["Sine (sin)", "Cosine (cos)", "Tangent (tan)"], horizontal=True)
+    func_type = st.radio("기본 삼각함수 선택:", ["Sine (sin)", "Cosine (cos)", "Tangent (tan)"], horizontal=True)
 
     col_ctrl, col_graph = st.columns([1, 2])
 
@@ -293,7 +295,7 @@ elif menu == "3. 그래프 실험실 🔬":
         )
         st.plotly_chart(fig_lab, use_container_width=True)
 
-    st.markdown("### 💡 그래프 실시간 분석 리포트")
+    st.markdown("### 💡 AI 그래프 실시간 분석 리포트")
     
     analysis_text = []
     if abs(A) != 1.0:
@@ -349,7 +351,7 @@ elif menu == "3. 그래프 실험실 🔬":
 # -----------------------------------------------------------------------------
 elif menu == "4. 인터랙티브 그래프 퀴즈 🎯":
     st.markdown("<div class='main-header'>🎯 인터랙티브 그래프 맞추기 퀴즈</div>", unsafe_allow_html=True)
-    st.markdown("제시된 **목표 조건**에 맞게 슬라이더를 조작하여 정확한 대수 함수 그래프를 완성해 보세요!")
+    st.markdown("제시된 **목표 조건**에 맞게 슬라이더를 조작하여 정확한 삼각함수 그래프를 완성해 보세요!")
 
     st.markdown("""
     <div class='concept-box'>
@@ -398,7 +400,7 @@ elif menu == "4. 인터랙티브 그래프 퀴즈 🎯":
 # MENU 5: 문제 풀기 및 단계별 힌트
 # -----------------------------------------------------------------------------
 elif menu == "5. 문제 풀기 📝":
-    st.markdown("<div class='main-header'>📝 대수 단원 단계별 평가 및 문제 풀기</div>", unsafe_allow_html=True)
+    st.markdown("<div class='main-header'>📝 [대수] 삼각함수 단계별 평가 및 문제 풀기</div>", unsafe_allow_html=True)
 
     problems = [
         {
@@ -500,35 +502,80 @@ elif menu == "6. 오답 / 복습 노트 📓":
             """, unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
-# MENU 7: 대수 개념 도우미
+# MENU 7: 삼각함수 도우미 (사진 업로드 / 멀티모달 기능 구현)
 # -----------------------------------------------------------------------------
-elif menu == "7. 대수 개념 도우미 🤖":
-    st.markdown("<div class='main-header'>🤖 대수 개념 도우미</div>", unsafe_allow_html=True)
-    st.caption("공통수학1 대수 단원과 삼각함수 개념에 대해 궁금한 점을 질문해 보세요!")
+elif menu == "7. 삼각함수 도우미 🤖":
+    st.markdown("<div class='main-header'>🤖 삼각함수 AI 챗봇 & 문제 풀이 도우미</div>", unsafe_allow_html=True)
+    st.caption("[대수] 과목의 삼각함수에 대해 질문하거나, 문제를 직접 찍어서 풀어달라고 해보세요!")
 
-    faq = st.selectbox(
-        "자주 묻는 질문(FAQ)을 선택해 보세요:",
-        [
-            "질문을 선택하세요...",
-            "왜 180도가 파이(π) 라디안인가요?",
-            "사인이랑 코사인은 평행이동하면 똑같아지나요?",
-            "탄젠트는 왜 주기와 최댓값이 다른가요?"
-        ]
-    )
+    tab_faq, tab_photo = st.tabs(["💬 개념 질문하기", "📷 문제 사진 찍어 풀기"])
 
-    if faq == "왜 180도가 파이(π) 라디안인가요?":
-        st.chat_message("assistant").write(
-            "원의 둘레는 $2\\pi r$입니다. 반지름 $r=1$인 단위원에서는 둘레의 길이가 $2\\pi$가 되지요!\n\n"
-            "**라디안(radian)**은 **'호의 길이 = 각도'**로 정의하기 때문에, "
-            "반지름 1인 원 한 바퀴($360^\\circ$)를 돌았을 때의 각도는 둘레의 길이와 같은 **$2\\pi \\text{ rad}$**가 됩니다.\n\n"
-            "따라서 양변을 2로 나누면 **$180^\\circ = \\pi \\text{ rad}$**가 됩니다."
+    with tab_faq:
+        faq = st.selectbox(
+            "자주 묻는 질문(FAQ)을 선택해 보세요:",
+            [
+                "질문을 선택하세요...",
+                "왜 180도가 파이(π) 라디안인가요?",
+                "사인이랑 코사인은 평행이동하면 똑같아지나요?",
+                "탄젠트는 왜 주기와 최댓값이 다른가요?"
+            ]
         )
-    elif faq == "사인이랑 코사인은 평행이동하면 똑같아지나요?":
-        st.chat_message("assistant").write("네, 맞습니다! 사인 그래프를 x축 방향으로 $-\\pi/2$ (90°)만큼 평행이동하면 코사인 그래프와 완전히 겹치게 됩니다. 즉, $\\cos(x) = \\sin(x + \\pi/2)$ 의 관계가 성립합니다.")
-    elif faq == "탄젠트는 왜 주기와 최댓값이 다른가요?":
-        st.chat_message("assistant").write("탄젠트는 $\\tan \\theta = \\frac{y}{x}$ (기울기)로 정의됩니다. x가 0이 되는 $90^\\circ, 270^\\circ$ 등에서는 분모가 0이 되어 값이 무한히 커지므로 **최댓값과 최솟값이 없습니다**. 또한 반 바퀴만 돌아도 기울기 패턴이 똑같이 반복되므로 **주기가 $2\\pi$가 아닌 $\\pi$**입니다.")
 
-    user_q = st.chat_input("대수 단원 개념에 대해 추가로 궁금한 점을 입력하세요...")
-    if user_q:
-        st.chat_message("user").write(user_q)
-        st.chat_message("assistant").write(f"'{user_q}'에 대한 질문이군요! 대수 단원에서는 각도는 회전한 양, 함숫값은 단위원의 좌표(x: cos, y: sin, 기울기: tan)라는 기본 원리를 항상 기억하세요!")
+        if faq == "왜 180도가 파이(π) 라디안인가요?":
+            st.chat_message("assistant").write(
+                "원의 둘레는 $2\\pi r$입니다. 반지름 $r=1$인 단위원에서는 둘레의 길이가 $2\\pi$가 되지요!\n\n"
+                "**라디안(radian)**은 **'호의 길이 = 각도'**로 정의하기 때문에, "
+                "반지름 1인 원 한 바퀴($360^\\circ$)를 돌았을 때의 각도는 둘레의 길이와 같은 **$2\\pi \\text{ rad}$**가 됩니다.\n\n"
+                "따라서 양변을 2로 나누면 **$180^\\circ = \\pi \\text{ rad}$**가 됩니다."
+            )
+        elif faq == "사인이랑 코사인은 평행이동하면 똑같아지나요?":
+            st.chat_message("assistant").write("네, 맞습니다! 사인 그래프를 x축 방향으로 $-\\pi/2$ (90°)만큼 평행이동하면 코사인 그래프와 완전히 겹치게 됩니다. 즉, $\\cos(x) = \\sin(x + \\pi/2)$ 의 관계가 성립합니다.")
+        elif faq == "탄젠트는 왜 주기와 최댓값이 다른가요?":
+            st.chat_message("assistant").write("탄젠트는 $\\tan \\theta = \\frac{y}{x}$ (기울기)로 정의됩니다. x가 0이 되는 $90^\\circ, 270^\\circ$ 등에서는 분모가 0이 되어 값이 무한히 커지므로 **최댓값과 최솟값이 없습니다**. 또한 반 바퀴만 돌아도 기울기 패턴이 똑같이 반복되므로 **주기가 $2\\pi$가 아닌 $\\pi$**입니다.")
+
+        user_q = st.chat_input("삼각함수에 대해 추가로 궁금한 점을 입력하세요...")
+        if user_q:
+            st.chat_message("user").write(user_q)
+            st.chat_message("assistant").write(f"'{user_q}'에 대한 질문이군요! 삼각함수에서 각도는 회전한 양, 함숫값은 단위원의 좌표(x: cos, y: sin, 기울기: tan)라는 기본 원리를 항상 기억하세요!")
+
+    with tab_photo:
+        st.subheader("📸 삼각함수 문제 사진으로 질문하기")
+        st.markdown("교재나 시험지의 삼각함수 문제를 카메라로 찍거나 이미지 파일로 올려주세요.")
+
+        col_cam, col_file = st.columns([1, 1])
+        captured_img = None
+
+        with col_cam:
+            cam_photo = st.camera_input("📷 직접 촬영하기")
+            if cam_photo:
+                captured_img = Image.open(cam_photo)
+
+        with col_file:
+            uploaded_photo = st.file_uploader("📁 파일 업로드하기 (JPG, PNG)", type=["jpg", "jpeg", "png"])
+            if uploaded_photo:
+                captured_img = Image.open(uploaded_photo)
+
+        if captured_img:
+            st.image(captured_img, caption="업로드한 문제 이미지", use_container_width=True)
+            user_prompt = st.text_input("질문 내용 (예: 이 문제 풀이 과정과 정답 알려줘):", value="이 삼각함수 문제의 단계별 풀이 과정과 정답을 학생 눈높이에 맞게 쉽게 설명해줘.")
+
+            if st.button("✨ AI에게 풀이 요청하기", type="primary"):
+                api_key = os.getenv("GEMINI_API_KEY")
+                
+                if not api_key:
+                    st.warning("🔑 `GEMINI_API_KEY` 환경 변수가 설정되어 있지 않습니다. Streamlit Secrets에 API 키를 등록하면 AI 실시간 분석을 사용할 수 있습니다.")
+                    st.info("💡 **가상 풀이 결과 예시**: 이미지에서 문제를 인식했습니다. 주어진 그래프의 진폭 $A=2$, 주기 $T=\\pi$ 이므로 $B=2$ 가 됩니다.")
+                else:
+                    try:
+                        from google import genai
+                        client = genai.Client(api_key=api_key)
+                        
+                        with st.spinner("🔍 AI가 문제를 분석하고 해설을 작성 중입니다..."):
+                            response = client.models.generate_content(
+                                model='gemini-2.5-flash',
+                                contents=[captured_img, user_prompt]
+                            )
+                            st.markdown("### 📝 AI 풀이 결과")
+                            st.write(response.text)
+                    except Exception as e:
+                        st.error(f"오류가 발생했습니다: {e}")
