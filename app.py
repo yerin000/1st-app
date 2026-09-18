@@ -31,6 +31,7 @@ st.markdown("""
     }
     .card {
         background-color: #F8FAFC;
+        color: #1F2937;
         border-radius: 12px;
         padding: 20px;
         border: 1px solid #E2E8F0;
@@ -38,6 +39,7 @@ st.markdown("""
     }
     .concept-box {
         background-color: #EFF6FF;
+        color: #1E3A8A;
         border-left: 5px solid #3B82F6;
         padding: 15px;
         border-radius: 4px;
@@ -45,6 +47,7 @@ st.markdown("""
     }
     .hint-box {
         background-color: #FEF3C7;
+        color: #92400E;
         border-left: 5px solid #F59E0B;
         padding: 12px;
         border-radius: 4px;
@@ -52,6 +55,7 @@ st.markdown("""
     }
     .success-box {
         background-color: #D1FAE5;
+        color: #065F46;
         border-left: 5px solid #10B981;
         padding: 12px;
         border-radius: 4px;
@@ -59,6 +63,7 @@ st.markdown("""
     }
     .error-box {
         background-color: #FEE2E2;
+        color: #991B1B;
         border-left: 5px solid #EF4444;
         padding: 12px;
         border-radius: 4px;
@@ -72,6 +77,8 @@ st.markdown("""
 # -----------------------------------------------------------------------------
 if 'quiz_score' not in st.session_state:
     st.session_state.quiz_score = 0
+if 'solved_problems' not in st.session_state:
+    st.session_state.solved_problems = set()
 if 'wrong_answers' not in st.session_state:
     st.session_state.wrong_answers = []
 if 'lab_quiz_cleared' not in st.session_state:
@@ -100,7 +107,7 @@ menu = st.sidebar.radio(
 
 st.sidebar.markdown("---")
 st.sidebar.write("🏆 **나의 학습 현황**")
-st.sidebar.write(f"- 풀이 맞춘 문제 수: **{st.session_state.quiz_score} 개**")
+st.sidebar.write(f"- 맞춘 문제 수: **{st.session_state.quiz_score} 개**")
 st.sidebar.write(f"- 오답 노트 항목: **{len(st.session_state.wrong_answers)} 개**")
 
 # -----------------------------------------------------------------------------
@@ -154,7 +161,7 @@ if menu == "1. 삼각함수 시작하기 🎠":
     st.success("💡 **핵심 요약**: 일정한 원운동을 시간을 축으로 길게 늘려놓으면 연못의 물결 모양 같은 **사인(Sine) 파동 그래프**가 탄생합니다!")
 
 # -----------------------------------------------------------------------------
-# MENU 2: 개념 학습
+# MENU 2: 개념 학습 (오류 수정 부분 포함)
 # -----------------------------------------------------------------------------
 elif menu == "2. 개념 학습 📖":
     st.markdown("<div class='main-header'>📖 [대수] 삼각함수 기초 개념 Master</div>", unsafe_allow_html=True)
@@ -163,7 +170,7 @@ elif menu == "2. 개념 학습 📖":
 
     with tab1:
         st.subheader("1️⃣ 60분법(°) vs 호도법(Radian)")
-        st.markdown("""
+        st.markdown(r"""
         - **60분법**: 원 한 바퀴를 360등분한 단위 (`1°`, `90°`, `180°` ...)
         - **호도법(라디안)**: **반지름의 길이와 호의 길이가 같아질 때의 각도**를 `1 라디안(rad)`으로 정의합니다.
         - **핵심 관계식**: **$180^\circ = \pi \text{ rad}$**  |  **$360^\circ = 2\pi \text{ rad}$**
@@ -180,7 +187,7 @@ elif menu == "2. 개념 학습 📖":
 
         col_a, col_b = st.columns([1, 1])
         with col_a:
-            st.markdown(f"""
+            st.markdown(rf"""
             <div class='concept-box'>
                 <h4>📐 입력된 각도 변환 계산</h4>
                 <ul>
@@ -201,11 +208,11 @@ elif menu == "2. 개념 학습 📖":
 
     with tab2:
         st.subheader("2️⃣ 단위원(Unit Circle) 위에서 삼각함수의 정의")
-        st.markdown("""
+        st.markdown(r"""
         반지름이 1인 원(단위원) 위에서 동경(각도)이 나타내는 점 $P(x, y)$가 있을 때:
         - **$\cos \theta = x$ 좌표** (가로 위치)
         - **$\sin \theta = y$ 좌표** (세로 높이)
-        - **$\tan \theta = \\frac{y}{x}$** (직선의 기울기)
+        - **$\tan \theta = \frac{y}{x}$** (직선의 기울기)
         """)
 
         angle = st.slider("단위원 위의 점 P 움직이기 (각도 θ):", 0, 360, 45, step=5)
@@ -228,12 +235,15 @@ elif menu == "2. 개념 학습 📖":
             st.plotly_chart(fig_unit, use_container_width=True)
 
         with c2:
-            st.markdown(f"""
+            tan_val_str = f"{np.tan(rad_a):.4f}" if angle not in [90, 270] else r"\text{정의되지 않음} (\infty)"
+            
+            # r-string(raw string)을 사용하여 \theta, \cos, \sin, \tan 이 깨지지 않도록 수정
+            st.markdown(rf"""
             <div class='card'>
                 <h4>📍 각도 $\theta = {angle}^\circ$ 일 때 삼각함수 값</h4>
                 <p>🔹 <b>$\cos({angle}^\circ)$</b> (x좌표) = <span style='color:blue; font-weight:bold;'>{x_pt:.4f}</span></p>
                 <p>🔹 <b>$\sin({angle}^\circ)$</b> (y좌표) = <span style='color:red; font-weight:bold;'>{y_pt:.4f}</span></p>
-                <p>🔹 <b>$\tan({angle}^\circ)$</b> (기울기) = <span style='color:green; font-weight:bold;'>{np.tan(rad_a):.4f}</span> (단, 90°, 270°는 정의되지 않음)</p>
+                <p>🔹 <b>$\tan({angle}^\circ)$</b> (기울기) = <span style='color:green; font-weight:bold;'>{tan_val_str}</span> (단, 90°, 270°는 정의되지 않음)</p>
             </div>
             """, unsafe_allow_html=True)
 
@@ -244,7 +254,7 @@ elif menu == "2. 개념 학습 📖":
 # -----------------------------------------------------------------------------
 elif menu == "3. 그래프 실험실 🔬":
     st.markdown("<div class='main-header'>🔬 삼각함수 그래프 실험실</div>", unsafe_allow_html=True)
-    st.markdown("<div class='sub-header'>$y = A \\sin(Bx + C) + D$ 변수 계수를 직접 움직이며 그래프의 변화를 관찰하세요.</div>", unsafe_allow_html=True)
+    st.markdown(r"<div class='sub-header'>$y = A \sin(Bx + C) + D$ 변수 계수를 직접 움직이며 그래프의 변화를 관찰하세요.</div>", unsafe_allow_html=True)
 
     func_type = st.radio("기본 삼각함수 선택:", ["Sine (sin)", "Cosine (cos)", "Tangent (tan)"], horizontal=True)
 
@@ -353,7 +363,7 @@ elif menu == "4. 인터랙티브 그래프 퀴즈 🎯":
     st.markdown("<div class='main-header'>🎯 인터랙티브 그래프 맞추기 퀴즈</div>", unsafe_allow_html=True)
     st.markdown("제시된 **목표 조건**에 맞게 슬라이더를 조작하여 정확한 삼각함수 그래프를 완성해 보세요!")
 
-    st.markdown("""
+    st.markdown(r"""
     <div class='concept-box'>
         <h4>🎯 오늘의 미션 퀘스트</h4>
         <p>다음 조건을 만족하는 <b>y = A sin(Bx) + D</b> 그래프를 만드세요.</p>
@@ -379,9 +389,9 @@ elif menu == "4. 인터랙티브 그래프 퀴즈 🎯":
             
             feedback = []
             if user_A + user_D != 3 or -user_A + user_D != -1:
-                feedback.append("• 💡 **높이 힌트**: 최댓값이 3, 최솟값이 -1이 되려면 (진폭 A)와 (상하 이동 D)의 합과 차를 생각해보세요.")
+                feedback.append(r"• 💡 **높이 힌트**: 최댓값이 3, 최솟값이 -1이 되려면 (진폭 A)와 (상하 이동 D)의 합과 차를 생각해보세요.")
             if user_B != target_B:
-                feedback.append("• 💡 **주기 힌트**: 주기가 π가 되려면 공식 $2\pi / B = \pi$ 에서 B의 값은 얼마일까요?")
+                feedback.append(r"• 💡 **주기 힌트**: 주기가 $\pi$가 되려면 공식 $2\pi / B = \pi$ 에서 B의 값은 얼마일까요?")
             
             for fb in feedback:
                 st.write(fb)
@@ -433,17 +443,18 @@ elif menu == "5. 문제 풀기 📝":
     ]
 
     for p in problems:
-        st.markdown(f"#### [{p['type']}] Q{p['id']}. {p['question']}")
-        user_choice = st.radio(f"정답을 선택하세요 (Q{p['id']}):", p['options'], key=f"q_radio_{p['id']}")
+        p_id = p['id']
+        st.markdown(f"#### [{p['type']}] Q{p_id}. {p['question']}")
+        user_choice = st.radio(f"정답을 선택하세요 (Q{p_id}):", p['options'], key=f"q_radio_{p_id}")
 
         col_h1, col_h2 = st.columns([1, 1])
 
         with col_h1:
-            h_key = f"hint_{p['id']}"
+            h_key = f"hint_{p_id}"
             if h_key not in st.session_state.hint_level:
                 st.session_state.hint_level[h_key] = 0
 
-            if st.button(f"💡 힌트 보기 (현재 {st.session_state.hint_level[h_key]}/3 단계)", key=f"h_btn_{p['id']}"):
+            if st.button(f"💡 힌트 보기 (현재 {st.session_state.hint_level[h_key]}/3 단계)", key=f"h_btn_{p_id}"):
                 if st.session_state.hint_level[h_key] < 3:
                     st.session_state.hint_level[h_key] += 1
 
@@ -456,10 +467,12 @@ elif menu == "5. 문제 풀기 📝":
                 st.markdown(f"<div class='hint-box'><b>힌트 3단계:</b> {p['hint3']}</div>", unsafe_allow_html=True)
 
         with col_h2:
-            if st.button(f"✅ 정답 제출 (Q{p['id']})", key=f"sub_btn_{p['id']}"):
+            if st.button(f"✅ 정답 제출 (Q{p_id})", key=f"sub_btn_{p_id}"):
                 if user_choice == p['answer']:
                     st.success("🎉 정답입니다!")
-                    st.session_state.quiz_score += 1
+                    if p_id not in st.session_state.solved_problems:
+                        st.session_state.quiz_score += 1
+                        st.session_state.solved_problems.add(p_id)
                 else:
                     st.error("❌ 오답입니다.")
                     wrong_entry = {
@@ -502,7 +515,7 @@ elif menu == "6. 오답 / 복습 노트 📓":
             """, unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
-# MENU 7: 삼각함수 도우미 (사진 업로드 / 멀티모달 기능 구현)
+# MENU 7: 삼각함수 도우미
 # -----------------------------------------------------------------------------
 elif menu == "7. 삼각함수 도우미 🤖":
     st.markdown("<div class='main-header'>🤖 삼각함수 AI 챗봇 & 문제 풀이 도우미</div>", unsafe_allow_html=True)
@@ -523,15 +536,16 @@ elif menu == "7. 삼각함수 도우미 🤖":
 
         if faq == "왜 180도가 파이(π) 라디안인가요?":
             st.chat_message("assistant").write(
-                "원의 둘레는 $2\\pi r$입니다. 반지름 $r=1$인 단위원에서는 둘레의 길이가 $2\\pi$가 되지요!\n\n"
-                "**라디안(radian)**은 **'호의 길이 = 각도'**로 정의하기 때문에, "
-                "반지름 1인 원 한 바퀴($360^\\circ$)를 돌았을 때의 각도는 둘레의 길이와 같은 **$2\\pi \\text{ rad}$**가 됩니다.\n\n"
-                "따라서 양변을 2로 나누면 **$180^\\circ = \\pi \\text{ rad}$**가 됩니다."
+                r"원의 둘레는 $2\pi r$입니다. 반지름 $r=1$인 단위원에서는 둘레의 길이가 $2\pi$가 되지요!"
+                "\n\n**라디안(radian)**은 **'호의 길이 = 각도'**로 정의하기 때문에, "
+                r"반지름 1인 원 한 바퀴($360^\circ$)를 돌았을 때의 각도는 둘레의 길이와 같은 **$2\pi \text{ rad}$**가 됩니다."
+                "\n\n"
+                r"따라서 양변을 2로 나누면 **$180^\circ = \pi \text{ rad}$**가 됩니다."
             )
         elif faq == "사인이랑 코사인은 평행이동하면 똑같아지나요?":
-            st.chat_message("assistant").write("네, 맞습니다! 사인 그래프를 x축 방향으로 $-\\pi/2$ (90°)만큼 평행이동하면 코사인 그래프와 완전히 겹치게 됩니다. 즉, $\\cos(x) = \\sin(x + \\pi/2)$ 의 관계가 성립합니다.")
+            st.chat_message("assistant").write(r"네, 맞습니다! 사인 그래프를 x축 방향으로 $-\pi/2$ (90°)만큼 평행이동하면 코사인 그래프와 완전히 겹치게 됩니다. 즉, $\cos(x) = \sin(x + \pi/2)$ 의 관계가 성립합니다.")
         elif faq == "탄젠트는 왜 주기와 최댓값이 다른가요?":
-            st.chat_message("assistant").write("탄젠트는 $\\tan \\theta = \\frac{y}{x}$ (기울기)로 정의됩니다. x가 0이 되는 $90^\\circ, 270^\\circ$ 등에서는 분모가 0이 되어 값이 무한히 커지므로 **최댓값과 최솟값이 없습니다**. 또한 반 바퀴만 돌아도 기울기 패턴이 똑같이 반복되므로 **주기가 $2\\pi$가 아닌 $\\pi$**입니다.")
+            st.chat_message("assistant").write(r"탄젠트는 $\tan \theta = \frac{y}{x}$ (기울기)로 정의됩니다. x가 0이 되는 $90^\circ, 270^\circ$ 등에서는 분모가 0이 되어 값이 무한히 커지므로 **최댓값과 최솟값이 없습니다**. 또한 반 바퀴만 돌아도 기울기 패턴이 똑같이 반복되므로 **주기가 $2\pi$가 아닌 $\pi$**입니다.")
 
         user_q = st.chat_input("삼각함수에 대해 추가로 궁금한 점을 입력하세요...")
         if user_q:
@@ -560,19 +574,19 @@ elif menu == "7. 삼각함수 도우미 🤖":
             user_prompt = st.text_input("질문 내용 (예: 이 문제 풀이 과정과 정답 알려줘):", value="이 삼각함수 문제의 단계별 풀이 과정과 정답을 학생 눈높이에 맞게 쉽게 설명해줘.")
 
             if st.button("✨ AI에게 풀이 요청하기", type="primary"):
-                api_key = os.getenv("GEMINI_API_KEY")
-                
+                api_key = st.secrets.get("GEMINI_API_KEY") if "GEMINI_API_KEY" in st.secrets else os.getenv("GEMINI_API_KEY")
+
                 if not api_key:
                     st.warning("🔑 `GEMINI_API_KEY` 환경 변수가 설정되어 있지 않습니다. Streamlit Secrets에 API 키를 등록하면 AI 실시간 분석을 사용할 수 있습니다.")
-                    st.info("💡 **가상 풀이 결과 예시**: 이미지에서 문제를 인식했습니다. 주어진 그래프의 진폭 $A=2$, 주기 $T=\\pi$ 이므로 $B=2$ 가 됩니다.")
+                    st.info(r"💡 **가상 풀이 결과 예시**: 이미지에서 문제를 인식했습니다. 주어진 그래프의 진폭 $A=2$, 주기 $T=\pi$ 이므로 $B=2$ 가 됩니다.")
                 else:
                     try:
                         from google import genai
                         client = genai.Client(api_key=api_key)
-                        
+
                         with st.spinner("🔍 AI가 문제를 분석하고 해설을 작성 중입니다..."):
                             response = client.models.generate_content(
-                                model='gemini-2.5-flash',
+                                model='gemini-2.0-flash',
                                 contents=[captured_img, user_prompt]
                             )
                             st.markdown("### 📝 AI 풀이 결과")
