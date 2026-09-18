@@ -64,7 +64,7 @@ st.markdown("""
         margin-top: 10px;
     }
 </style>
-""", unsafe_allow_dict=True)
+""", unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
 # 2. 세션 상태 (Session State) 초기화
@@ -103,11 +103,11 @@ st.sidebar.write(f"- 풀이 맞춘 문제 수: **{st.session_state.quiz_score} �
 st.sidebar.write(f"- 오답 노트 항목: **{len(st.session_state.wrong_answers)} 개**")
 
 # -----------------------------------------------------------------------------
-# MENU 1: 삼각함수 시작하기 (회전목마 스토리텔링)
+# MENU 1: 삼각함수 시작하기
 # -----------------------------------------------------------------------------
 if menu == "1. 삼각함수 시작하기 🎠":
-    st.markdown("<div class='main-header'>🎠 삼각함수, 도대체 왜 배울까?</div>", unsafe_allow_dict=True)
-    st.markdown("<div class='sub-header'>일상 속의 '반복되는 회전 운동'에서 시작하는 삼각함수 개념</div>", unsafe_allow_dict=True)
+    st.markdown("<div class='main-header'>🎠 삼각함수, 도대체 왜 배울까?</div>", unsafe_allow_html=True)
+    st.markdown("<div class='sub-header'>일상 속의 '반복되는 회전 운동'에서 시작하는 삼각함수 개념</div>", unsafe_allow_html=True)
 
     st.markdown("""
     <div class='card'>
@@ -116,7 +116,7 @@ if menu == "1. 삼각함수 시작하기 🎠":
         나의 <b>위치(높이)</b>는 시간에 따라 오르락내리락 일정하게 반복됩니다.<br>
         이런 <b>반복되는 원운동을 수학적으로 매끄럽게 표현해 주는 도구</b>가 바로 <b>삼각함수</b>입니다!</p>
     </div>
-    """, unsafe_allow_dict=True)
+    """, unsafe_allow_html=True)
 
     col1, col2 = st.columns([1, 1])
 
@@ -132,22 +132,13 @@ if menu == "1. 삼각함수 시작하기 🎠":
         st.info(f"⏱ 현재 회전각: **{time_slider}°** | 📏 현재 상대 높이(Y축): **{y_pos:.2f}**")
 
     with col2:
-        # 회전 원운동 & 높이 변화 동시 시각화
         fig = go.Figure()
-        
-        # 원 그리기
         theta = np.linspace(0, 2*np.pi, 100)
         fig.add_trace(go.Scatter(x=np.cos(theta), y=np.sin(theta), mode='lines', name='회전 궤도', line=dict(color='lightgray', dash='dash')))
-        
-        # 센터 및 기준선
         fig.add_trace(go.Scatter(x=[-1.2, 1.2], y=[0, 0], mode='lines', line=dict(color='gray', width=1), showlegend=False))
         fig.add_trace(go.Scatter(x=[0, 0], y=[-1.2, 1.2], mode='lines', line=dict(color='gray', width=1), showlegend=False))
-
-        # 현재 회전목마 위치
         fig.add_trace(go.Scatter(x=[0, x_pos], y=[0, y_pos], mode='lines+markers', name='회전 반지름', line=dict(color='blue', width=3)))
         fig.add_trace(go.Scatter(x=[x_pos], y=[y_pos], mode='markers', marker=dict(size=14, color='red'), name='회전목마(점)'))
-
-        # 높이 가이드선
         fig.add_trace(go.Scatter(x=[x_pos, 1.3], y=[y_pos, y_pos], mode='lines', line=dict(color='red', dash='dot'), name='높이 표시선'))
 
         fig.update_layout(
@@ -165,7 +156,7 @@ if menu == "1. 삼각함수 시작하기 🎠":
 # MENU 2: 개념 학습
 # -----------------------------------------------------------------------------
 elif menu == "2. 개념 학습 📖":
-    st.markdown("<div class='main-header'>📖 삼각함수 기초 개념 Master</div>", unsafe_allow_dict=True)
+    st.markdown("<div class='main-header'>📖 삼각함수 기초 개념 Master</div>", unsafe_allow_html=True)
 
     tab1, tab2 = st.tabs(["STEP 1. 각과 호도법 (Radian)", "STEP 2. 단위원과 삼각함수의 정의"])
 
@@ -196,18 +187,14 @@ elif menu == "2. 개념 학습 📖":
                     <li>호도법(라디안): <b>{pi_factor:.2f} $\pi$ rad</b> (${rad_val:.4f}\text{{ rad}}$)</li>
                 </ul>
             </div>
-            """, unsafe_allow_dict=True)
+            """, unsafe_allow_html=True)
 
         with col_b:
-            # 호도법 원 시각화
             fig_rad = go.Figure()
             t = np.linspace(0, 2*np.pi, 100)
             fig_rad.add_trace(go.Scatter(x=np.cos(t), y=np.sin(t), mode='lines', line=dict(color='lightgray')))
-            
-            # 부채꼴 호 그리기
             t_sub = np.linspace(0, rad_val, 50)
             fig_rad.add_trace(go.Scatter(x=np.append([0], np.cos(t_sub)), y=np.append([0], np.sin(t_sub)), fill='toself', fillcolor='rgba(59, 130, 246, 0.2)', line=dict(color='blue'), name='각 영역'))
-            
             fig_rad.update_layout(xaxis=dict(range=[-1.2, 1.2]), yaxis=dict(range=[-1.2, 1.2], scaleanchor="x", scaleratio=1), height=300, margin=dict(l=10, r=10, t=10, b=10))
             st.plotly_chart(fig_rad, use_container_width=True)
 
@@ -217,7 +204,7 @@ elif menu == "2. 개념 학습 📖":
         반지름이 1인 원(단위원) 위에서 동경(각도)이 나타내는 점 $P(x, y)$가 있을 때:
         - **$\cos \theta = x$ 좌표** (가로 위치)
         - **$\sin \theta = y$ 좌표** (세로 높이)
-        - **$\tan \theta = \frac{y}{x}$** (직선의 기울기)
+        - **$\tan \theta = \\frac{y}{x}$** (직선의 기울기)
         """)
 
         angle = st.slider("단위원 위의 점 P 움직이기 (각도 θ):", 0, 360, 45, step=5)
@@ -228,14 +215,10 @@ elif menu == "2. 개념 학습 📖":
         c1, c2 = st.columns([1, 1])
         with c1:
             fig_unit = go.Figure()
-            # 단위원
             t = np.linspace(0, 2*np.pi, 100)
             fig_unit.add_trace(go.Scatter(x=np.cos(t), y=np.sin(t), mode='lines', line=dict(color='gray', dash='dot')))
-            # 축
             fig_unit.add_trace(go.Scatter(x=[-1.3, 1.3], y=[0, 0], mode='lines', line=dict(color='black', width=1)))
             fig_unit.add_trace(go.Scatter(x=[0, 0], y=[-1.3, 1.3], mode='lines', line=dict(color='black', width=1)))
-            
-            # 삼각비 직각삼각형 요소 (cos: blue, sin: red)
             fig_unit.add_trace(go.Scatter(x=[0, x_pt], y=[0, 0], mode='lines', line=dict(color='blue', width=4), name='cos θ (x좌표)'))
             fig_unit.add_trace(go.Scatter(x=[x_pt, x_pt], y=[0, y_pt], mode='lines', line=dict(color='red', width=4), name='sin θ (y좌표)'))
             fig_unit.add_trace(go.Scatter(x=[0, x_pt], y=[0, y_pt], mode='lines+markers', line=dict(color='black', width=2), marker=dict(size=8, color='green'), name='동경 P'))
@@ -251,33 +234,30 @@ elif menu == "2. 개념 학습 📖":
                 <p>🔹 <b>$\sin({angle}^\circ)$</b> (y좌표) = <span style='color:red; font-weight:bold;'>{y_pt:.4f}</span></p>
                 <p>🔹 <b>$\tan({angle}^\circ)$</b> (기울기) = <span style='color:green; font-weight:bold;'>{np.tan(rad_a):.4f}</span> (단, 90°, 270°는 정의되지 않음)</p>
             </div>
-            """, unsafe_allow_dict=True)
+            """, unsafe_allow_html=True)
 
             st.warning("💡 **꼭 기억하세요!** 단위원 위를 돌 때 **x좌표는 코사인(cos)**, **y좌표는 사인(sin)**입니다!")
 
 # -----------------------------------------------------------------------------
-# MENU 3: 핵심 기능 - 삼각함수 그래프 실험실
+# MENU 3: 그래프 실험실
 # -----------------------------------------------------------------------------
 elif menu == "3. 그래프 실험실 🔬":
-    st.markdown("<div class='main-header'>🔬 삼각함수 그래프 실험실</div>", unsafe_allow_dict=True)
-    st.markdown("<div class='sub-header'>$y = A \\sin(Bx + C) + D$ 변수 계수를 직접 움직이며 그래프의 변화를 관찰하세요.</div>", unsafe_allow_dict=True)
+    st.markdown("<div class='main-header'>🔬 삼각함수 그래프 실험실</div>", unsafe_allow_html=True)
+    st.markdown("<div class='sub-header'>$y = A \\sin(Bx + C) + D$ 변수 계수를 직접 움직이며 그래프의 변화를 관찰하세요.</div>", unsafe_allow_html=True)
 
-    # 1. 기본 함수 선택
     func_type = st.radio("기본 삼각함수 선택:", ["Sine (sin)", "Cosine (cos)", "Tangent (tan)"], horizontal=True)
 
     col_ctrl, col_graph = st.columns([1, 2])
 
     with col_ctrl:
         st.subheader("⚙️ 계수 조작 파라미터")
-        
         A = st.slider("진폭 (A)", -3.0, 3.0, 1.0, step=0.5, help="그래프의 위아래 확장/반전 (진폭)")
         B = st.slider("주기 관련 계수 (B)", 0.5, 4.0, 1.0, step=0.5, help="그래프의 좌우 압축/팽창 (주기)")
         C_deg = st.slider("위상 이동 계수 (C)", -180, 180, 0, step=30, help="x축 방향 평행이동")
         D = st.slider("상하 이동 (D)", -3.0, 3.0, 0.0, step=0.5, help="y축 방향 평행이동")
 
-        C = np.radians(C_deg) # 호도법 변환
+        C = np.radians(C_deg)
 
-    # 그래프 생성 데이터
     x = np.linspace(-2*np.pi, 2*np.pi, 500)
     
     if "sin" in func_type:
@@ -288,23 +268,19 @@ elif menu == "3. 그래프 실험실 🔬":
         func_symbol = r"\cos"
     else:
         y = A * np.tan(B * x + C) + D
-        # tan 그래프 이상치 튀는 현상 방지
         y[np.abs(y) > 10] = np.nan
         func_symbol = r"\tan"
 
     with col_graph:
         fig_lab = go.Figure()
 
-        # 원본 기본 그래프 (y = sin x) 비교용 가이드
         if "sin" in func_type:
             fig_lab.add_trace(go.Scatter(x=x, y=np.sin(x), mode='lines', name='기본 y = sin(x)', line=dict(color='lightgray', dash='dash')))
         elif "cos" in func_type:
             fig_lab.add_trace(go.Scatter(x=x, y=np.cos(x), mode='lines', name='기본 y = cos(x)', line=dict(color='lightgray', dash='dash')))
 
-        # 변형된 그래프
         fig_lab.add_trace(go.Scatter(x=x, y=y, mode='lines', name=f'y = {A}{func_symbol}({B}x + {C_deg}°) + {D}', line=dict(color='#2563EB', width=3)))
 
-        # X축 라벨을 라디안 표기법 형태로 설정
         fig_lab.update_layout(
             title=f"수식: y = {A} {func_type[:3]}({B}x + {C_deg}°) + {D}",
             xaxis=dict(
@@ -318,23 +294,19 @@ elif menu == "3. 그래프 실험실 🔬":
         )
         st.plotly_chart(fig_lab, use_container_width=True)
 
-    # 6. 그래프 변화 설명 기능 (자동 분석 패널)
     st.markdown("### 💡 AI 그래프 실시간 분석 리포트")
     
     analysis_text = []
-    
-    # A 분석
     if abs(A) != 1.0:
-        analysis_text.append(f"• **진폭(A={A})**: 그래프의 최댓값과 최솟값의 폭이 **{abs(A)}배** 변했습니다. (A < 0이면 위아래가 뒤집힙니다.)")
-    # B 분석
+        analysis_text.append(f"• **진폭(A={A})**: 그래프의 최댓값과 최솟값의 폭이 **{abs(A)}배** 변했습니다.")
+    
     period = (2 * np.pi / abs(B)) if "tan" not in func_type else (np.pi / abs(B))
     period_str = f"{period/np.pi:.2f}π"
-    analysis_text.append(f"• **주기(B={B})**: 원래 주기에서 변형되어, 한 번 파동이 반복되는 **주기가 [{period_str}]**로 변했습니다. (B가 커질수록 주기는 짧아져 촘촘해집니다.)")
-    # C 분석
+    analysis_text.append(f"• **주기(B={B})**: 한 번 파동이 반복되는 **주기가 [{period_str}]**로 변했습니다.")
+    
     if C_deg != 0:
         shift_x = -C_deg / B
         analysis_text.append(f"• **위상 이동(C={C_deg}°)**: 그래프가 x축 방향으로 **{shift_x:.1f}° 만큼 평행이동**했습니다.")
-    # D 분석
     if D != 0:
         analysis_text.append(f"• **상하 이동(D={D})**: 중심선이 y = {D} 로 **위아래로 {D}만큼 이동**했습니다.")
 
@@ -346,9 +318,7 @@ elif menu == "3. 그래프 실험실 🔬":
     st.info("\n".join(analysis_text))
 
     st.markdown("---")
-    # 7. 단위원과 그래프 시각 연동 시메이션
     st.subheader("🔄 단위원운동 ➔ 사인 그래프 연동 애니메이션")
-    st.caption("왼쪽 단위원의 Y축 높이가 오른쪽 그래프로 그대로 이어지는 과정을 확인하세요.")
 
     anim_angle = st.slider("회전 재생 조작기 (각도):", 0, 720, 120, step=10)
     anim_rad = np.radians(anim_angle)
@@ -356,10 +326,8 @@ elif menu == "3. 그래프 실험실 🔬":
     col_u, col_g = st.columns([1, 2])
     with col_u:
         fig_u = go.Figure()
-        # 단위원
         t = np.linspace(0, 2*np.pi, 100)
         fig_u.add_trace(go.Scatter(x=np.cos(t), y=np.sin(t), mode='lines', line=dict(color='gray', dash='dot')))
-        # 동경 및 점
         fig_u.add_trace(go.Scatter(x=[0, np.cos(anim_rad)], y=[0, np.sin(anim_rad)], mode='lines+markers', line=dict(color='red', width=3)))
         fig_u.update_layout(title="단위원 (원운동)", xaxis=dict(range=[-1.3, 1.3]), yaxis=dict(range=[-1.5, 1.5], scaleanchor="x", scaleratio=1), height=300)
         st.plotly_chart(fig_u, use_container_width=True)
@@ -368,8 +336,6 @@ elif menu == "3. 그래프 실험실 🔬":
         fig_g = go.Figure()
         x_range = np.linspace(0, 4*np.pi, 300)
         fig_g.add_trace(go.Scatter(x=x_range, y=np.sin(x_range), mode='lines', line=dict(color='lightgray')))
-        
-        # 현재 트레이스 점
         fig_g.add_trace(go.Scatter(x=[anim_rad], y=[np.sin(anim_rad)], mode='markers', marker=dict(size=12, color='red'), name='현재 높이'))
         fig_g.update_layout(
             title="y = sin(x) 그래프 (높이의 궤적)",
@@ -383,7 +349,7 @@ elif menu == "3. 그래프 실험실 🔬":
 # MENU 4: 인터랙티브 그래프 퀴즈
 # -----------------------------------------------------------------------------
 elif menu == "4. 인터랙티브 그래프 퀴즈 🎯":
-    st.markdown("<div class='main-header'>🎯 인터랙티브 그래프 맞추기 퀴즈</div>", unsafe_allow_dict=True)
+    st.markdown("<div class='main-header'>🎯 인터랙티브 그래프 맞추기 퀴즈</div>", unsafe_allow_html=True)
     st.markdown("제시된 **목표 조건**에 맞게 슬라이더를 조작하여 정확한 삼각함수 그래프를 완성해 보세요!")
 
     st.markdown("""
@@ -395,24 +361,21 @@ elif menu == "4. 인터랙티브 그래프 퀴즈 🎯":
             <li><b>주기: π (180°)</b></li>
         </ul>
     </div>
-    """, unsafe_allow_dict=True)
+    """, unsafe_allow_html=True)
 
     user_A = st.slider("조작 A (진폭)", 0.5, 4.0, 1.0, step=0.5, key="q_A")
     user_B = st.slider("조작 B (주기 계수)", 0.5, 4.0, 1.0, step=0.5, key="q_B")
     user_D = st.slider("조작 D (상하 이동)", -2.0, 3.0, 0.0, step=0.5, key="q_D")
 
-    # 정답: A=2.0, B=2.0, D=1.0 (최댓값 2+1=3, 최솟값 -2+1=-1, 주기 2pi/2 = pi)
     target_A, target_B, target_D = 2.0, 2.0, 1.0
 
-    # 제출 및 검증
     if st.button("🚀 정답 확인하기"):
         if user_A == target_A and user_B == target_B and user_D == target_D:
-            st.markdown("<div class='success-box'>🎉 <b>정답입니다! 완벽해요!</b><br>진폭 A=2, 주기계수 B=2(주기 π), Y축 이동 D=1을 정확하게 맞추셨습니다!</div>", unsafe_allow_dict=True)
+            st.markdown("<div class='success-box'>🎉 <b>정답입니다! 완벽해요!</b><br>진폭 A=2, 주기계수 B=2(주기 π), Y축 이동 D=1을 정확하게 맞추셨습니다!</div>", unsafe_allow_html=True)
             st.session_state.lab_quiz_cleared = True
         else:
-            st.markdown("<div class='error-box'>❌ <b>아직 목표와 조금 다릅니다. 아래 힌트를 확인해 보세요!</b></div>", unsafe_allow_dict=True)
+            st.markdown("<div class='error-box'>❌ <b>아직 목표와 조금 다릅니다. 아래 힌트를 확인해 보세요!</b></div>", unsafe_allow_html=True)
             
-            # 피드백 제공
             feedback = []
             if user_A + user_D != 3 or -user_A + user_D != -1:
                 feedback.append("• 💡 **높이 힌트**: 최댓값이 3, 최솟값이 -1이 되려면 (진폭 A)와 (상하 이동 D)의 합과 차를 생각해보세요.")
@@ -422,7 +385,6 @@ elif menu == "4. 인터랙티브 그래프 퀴즈 🎯":
             for fb in feedback:
                 st.write(fb)
 
-    # 실시간 모니터링 그래프
     x_q = np.linspace(0, 2*np.pi, 300)
     y_user = user_A * np.sin(user_B * x_q) + user_D
     y_target = target_A * np.sin(target_B * x_q) + target_D
@@ -437,9 +399,8 @@ elif menu == "4. 인터랙티브 그래프 퀴즈 🎯":
 # MENU 5: 문제 풀기 및 단계별 힌트
 # -----------------------------------------------------------------------------
 elif menu == "5. 문제 풀기 📝":
-    st.markdown("<div class='main-header'>📝 삼각함수 단계별 평가 및 문제 풀기</div>", unsafe_allow_dict=True)
+    st.markdown("<div class='main-header'>📝 삼각함수 단계별 평가 및 문제 풀기</div>", unsafe_allow_html=True)
 
-    # 문제 데이터베이스
     problems = [
         {
             "id": 1,
@@ -472,12 +433,10 @@ elif menu == "5. 문제 풀기 📝":
 
     for p in problems:
         st.markdown(f"#### [{p['type']}] Q{p['id']}. {p['question']}")
-        
         user_choice = st.radio(f"정답을 선택하세요 (Q{p['id']}):", p['options'], key=f"q_radio_{p['id']}")
 
         col_h1, col_h2 = st.columns([1, 1])
 
-        # 9. 단계별 힌트 시스템
         with col_h1:
             h_key = f"hint_{p['id']}"
             if h_key not in st.session_state.hint_level:
@@ -489,11 +448,11 @@ elif menu == "5. 문제 풀기 📝":
 
             lvl = st.session_state.hint_level[h_key]
             if lvl >= 1:
-                st.markdown(f"<div class='hint-box'><b>힌트 1단계:</b> {p['hint1']}</div>", unsafe_allow_dict=True)
+                st.markdown(f"<div class='hint-box'><b>힌트 1단계:</b> {p['hint1']}</div>", unsafe_allow_html=True)
             if lvl >= 2:
-                st.markdown(f"<div class='hint-box'><b>힌트 2단계:</b> {p['hint2']}</div>", unsafe_allow_dict=True)
+                st.markdown(f"<div class='hint-box'><b>힌트 2단계:</b> {p['hint2']}</div>", unsafe_allow_html=True)
             if lvl >= 3:
-                st.markdown(f"<div class='hint-box'><b>힌트 3단계:</b> {p['hint3']}</div>", unsafe_allow_dict=True)
+                st.markdown(f"<div class='hint-box'><b>힌트 3단계:</b> {p['hint3']}</div>", unsafe_allow_html=True)
 
         with col_h2:
             if st.button(f"✅ 정답 제출 (Q{p['id']})", key=f"sub_btn_{p['id']}"):
@@ -502,7 +461,6 @@ elif menu == "5. 문제 풀기 📝":
                     st.session_state.quiz_score += 1
                 else:
                     st.error("❌ 오답입니다.")
-                    # 오답 노트 자동 저장
                     wrong_entry = {
                         "question": p['question'],
                         "user_ans": user_choice,
@@ -517,14 +475,14 @@ elif menu == "5. 문제 풀기 📝":
                         <b>왜 틀렸을까? (오답 해설)</b><br>
                         {p['explanation']}
                     </div>
-                    """, unsafe_allow_dict=True)
+                    """, unsafe_allow_html=True)
         st.markdown("---")
 
 # -----------------------------------------------------------------------------
 # MENU 6: 오답 / 복습 노트
 # -----------------------------------------------------------------------------
 elif menu == "6. 오답 / 복습 노트 📓":
-    st.markdown("<div class='main-header'>📓 나의 오답 & 복습 노트</div>", unsafe_allow_dict=True)
+    st.markdown("<div class='main-header'>📓 나의 오답 & 복습 노트</div>", unsafe_allow_html=True)
 
     if not st.session_state.wrong_answers:
         st.info("🎉 틀린 문제가 없습니다! 아주 훌륭합니다.")
@@ -540,13 +498,13 @@ elif menu == "6. 오답 / 복습 노트 📓":
                 <hr>
                 <p>💡 <b>상세 바른 풀이 설명:</b><br>{item['explanation']}</p>
             </div>
-            """, unsafe_allow_dict=True)
+            """, unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
-# MENU 7: 삼각함수 도우미 (AI Q&A)
+# MENU 7: 삼각함수 도우미
 # -----------------------------------------------------------------------------
 elif menu == "7. 삼각함수 도우미 🤖":
-    st.markdown("<div class='main-header'>🤖 삼각함수 챗봇 도우미</div>", unsafe_allow_dict=True)
+    st.markdown("<div class='main-header'>🤖 삼각함수 챗봇 도우미</div>", unsafe_allow_html=True)
     st.caption("공통수학1 삼각함수에 대해 궁금한 점을 무엇이든 질문하세요!")
 
     faq = st.selectbox(
@@ -564,7 +522,7 @@ elif menu == "7. 삼각함수 도우미 🤖":
     elif faq == "사인이랑 코사인은 평행이동하면 똑같아지나요?":
         st.chat_message("assistant").write("네, 맞습니다! 사인 그래프를 x축 방향으로 $-\pi/2$ (90°)만큼 평행이동하면 코사인 그래프와 완전히 겹치게 됩니다. 즉, $\cos(x) = \sin(x + \pi/2)$ 의 관계가 성립합니다.")
     elif faq == "탄젠트는 왜 주기와 최댓값이 다른가요?":
-        st.chat_message("assistant").write("탄젠트는 $\tan \theta = \frac{y}{x}$ (기울기)로 정의됩니다. x가 0이 되는 $90^\circ, 270^\circ$ 등에서는 분모가 0이 되어 값이 무한히 커지므로 **최댓값과 최솟값이 없습니다(없음)**. 또한 반 바퀴만 돌아도 기울기 패턴이 똑같이 반복되므로 **주기가 $2\pi$가 아닌 $\pi$**입니다.")
+        st.chat_message("assistant").write("탄젠트는 $\tan \theta = \\frac{y}{x}$ (기울기)로 정의됩니다. x가 0이 되는 $90^\circ, 270^\circ$ 등에서는 분모가 0이 되어 값이 무한히 커지므로 **최댓값과 최솟값이 없습니다(없음)**. 또한 반 바퀴만 돌아도 기울기 패턴이 똑같이 반복되므로 **주기가 $2\pi$가 아닌 $\pi$**입니다.")
 
     user_q = st.chat_input("삼각함수에 대해 추가로 궁금한 점을 입력하세요...")
     if user_q:
