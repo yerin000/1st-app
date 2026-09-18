@@ -1,6 +1,8 @@
 import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
+from PIL import Image
+import os
 
 # -----------------------------------------------------------------------------
 # 1. 페이지 설정 및 디자인 CSS
@@ -12,7 +14,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for Mobile Friendly & Modern Styling
 st.markdown("""
 <style>
     .main-header {
@@ -501,30 +502,81 @@ elif menu == "6. 오답 / 복습 노트 📓":
             """, unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
-# MENU 7: 삼각함수 도우미
+# MENU 7: 삼각함수 도우미 (사진 업로드 / 멀티모달 기능 구현)
 # -----------------------------------------------------------------------------
 elif menu == "7. 삼각함수 도우미 🤖":
-    st.markdown("<div class='main-header'>🤖 삼각함수 챗봇 도우미</div>", unsafe_allow_html=True)
-    st.caption("공통수학1 삼각함수에 대해 궁금한 점을 무엇이든 질문하세요!")
+    st.markdown("<div class='main-header'>🤖 삼각함수 AI 챗봇 & 문제 풀이 도우미</div>", unsafe_allow_html=True)
+    st.caption("공통수학1 삼각함수에 대해 질문하거나, 문제를 직접 찍어서 풀어달라고 해보세요!")
 
-    faq = st.selectbox(
-        "자주 묻는 질문(FAQ)을 선택해 보세요:",
-        [
-            "질문을 선택하세요...",
-            "왜 180도가 파이(π) 라디안인가요?",
-            "사인이랑 코사인은 평행이동하면 똑같아지나요?",
-            "탄젠트는 왜 주기와 최댓값이 다른가요?"
-        ]
-    )
+    # FAQ 탭과 사진 문제 풀이 탭 나누기
+    tab_faq, tab_photo = st.tabs(["💬 개념 질문하기", "📷 문제 사진 찍어 풀기"])
 
-    if faq == "왜 180도가 파이(π) 라디안인가요?":
-        st.chat_message("assistant").write("원 한 바퀴의 둘레는 $2\pi r$ 입니다. 반지름 $r=1$인 단위원에서 원 전체의 호의 길이는 $2\pi$가 되죠. 원 한 바퀴가 $360^\circ$이므로 $360^\circ = 2\pi \text{ rad}$ 이고, 양변을 2로 나누면 **$180^\circ = \pi \text{ rad}$** 가 됩니다!")
-    elif faq == "사인이랑 코사인은 평행이동하면 똑같아지나요?":
-        st.chat_message("assistant").write("네, 맞습니다! 사인 그래프를 x축 방향으로 $-\pi/2$ (90°)만큼 평행이동하면 코사인 그래프와 완전히 겹치게 됩니다. 즉, $\cos(x) = \sin(x + \pi/2)$ 의 관계가 성립합니다.")
-    elif faq == "탄젠트는 왜 주기와 최댓값이 다른가요?":
-        st.chat_message("assistant").write("탄젠트는 $\tan \theta = \\frac{y}{x}$ (기울기)로 정의됩니다. x가 0이 되는 $90^\circ, 270^\circ$ 등에서는 분모가 0이 되어 값이 무한히 커지므로 **최댓값과 최솟값이 없습니다(없음)**. 또한 반 바퀴만 돌아도 기울기 패턴이 똑같이 반복되므로 **주기가 $2\pi$가 아닌 $\pi$**입니다.")
+    with tab_faq:
+        faq = st.selectbox(
+            "자주 묻는 질문(FAQ)을 선택해 보세요:",
+            [
+                "질문을 선택하세요...",
+                "왜 180도가 파이(π) 라디안인가요?",
+                "사인이랑 코사인은 평행이동하면 똑같아지나요?",
+                "탄젠트는 왜 주기와 최댓값이 다른가요?"
+            ]
+        )
 
-    user_q = st.chat_input("삼각함수에 대해 추가로 궁금한 점을 입력하세요...")
-    if user_q:
-        st.chat_message("user").write(user_q)
-        st.chat_message("assistant").write(f"'{user_q}'에 대한 질문이군요! 삼각함수에서 각도는 회전한 양, 함숫값은 단위원의 좌표(x: cos, y: sin, 기울기: tan)라는 기본 원리를 항상 기억하세요!")
+        if faq == "왜 180도가 파이(π) 라디안인가요?":
+            st.chat_message("assistant").write(
+                "원의 둘레는 $2\\pi r$입니다. 반지름 $r=1$인 단위원에서는 둘레의 길이가 $2\\pi$가 되지요!\n\n"
+                "**라디안(radian)**은 **'호의 길이 = 각도'**로 정의하기 때문에, "
+                "반지름 1인 원 한 바퀴($360^\\circ$)를 돌았을 때의 각도는 둘레의 길이와 같은 **$2\\pi \\text{ rad}$**가 됩니다.\n\n"
+                "따라서 양변을 2로 나누면 **$180^\\circ = \\pi \\text{ rad}$**가 됩니다."
+            )
+        elif faq == "사인이랑 코사인은 평행이동하면 똑같아지나요?":
+            st.chat_message("assistant").write("네, 맞습니다! 사인 그래프를 x축 방향으로 $-\\pi/2$ (90°)만큼 평행이동하면 코사인 그래프와 완전히 겹치게 됩니다. 즉, $\\cos(x) = \\sin(x + \\pi/2)$ 의 관계가 성립합니다.")
+        elif faq == "탄젠트는 왜 주기와 최댓값이 다른가요?":
+            st.chat_message("assistant").write("탄젠트는 $\\tan \\theta = \\frac{y}{x}$ (기울기)로 정의됩니다. x가 0이 되는 $90^\\circ, 270^\\circ$ 등에서는 분모가 0이 되어 값이 무한히 커지므로 **최댓값과 최솟값이 없습니다**. 또한 반 바퀴만 돌아도 기울기 패턴이 똑같이 반복되므로 **주기가 $2\\pi$가 아닌 $\\pi$**입니다.")
+
+        user_q = st.chat_input("삼각함수에 대해 추가로 궁금한 점을 입력하세요...")
+        if user_q:
+            st.chat_message("user").write(user_q)
+            st.chat_message("assistant").write(f"'{user_q}'에 대한 질문이군요! 삼각함수에서 각도는 회전한 양, 함숫값은 단위원의 좌표(x: cos, y: sin, 기울기: tan)라는 기본 원리를 항상 기억하세요!")
+
+    with tab_photo:
+        st.subheader("📸 삼각함수 문제 사진으로 질문하기")
+        st.markdown("교재나 시험지의 삼각함수 문제를 카메라로 찍거나 이미지 파일로 올려주세요.")
+
+        col_cam, col_file = st.columns([1, 1])
+        captured_img = None
+
+        with col_cam:
+            cam_photo = st.camera_input("📷 직접 촬영하기")
+            if cam_photo:
+                captured_img = Image.open(cam_photo)
+
+        with col_file:
+            uploaded_photo = st.file_uploader("📁 파일 업로드하기 (JPG, PNG)", type=["jpg", "jpeg", "png"])
+            if uploaded_photo:
+                captured_img = Image.open(uploaded_photo)
+
+        if captured_img:
+            st.image(captured_img, caption="업로드한 문제 이미지", use_container_width=True)
+            user_prompt = st.text_input("질문 내용 (예: 이 문제 풀이 과정과 정답 알려줘):", value="이 삼각함수 문제의 단계별 풀이 과정과 정답을 학생 눈높이에 맞게 쉽게 설명해줘.")
+
+            if st.button("✨ AI에게 풀이 요청하기", type="primary"):
+                api_key = os.getenv("GEMINI_API_KEY")
+                
+                if not api_key:
+                    st.warning("🔑 `GEMINI_API_KEY` 환경 변수가 설정되어 있지 않습니다. Streamlit Secrets에 API 키를 등록하면 AI 실시간 분석을 사용할 수 있습니다.")
+                    st.info("💡 **가상 풀이 결과 예시**: 이미지에서 문제를 인식했습니다. 주어진 그래프의 진폭 $A=2$, 주기 $T=\\pi$ 이므로 $B=2$ 가 됩니다.")
+                else:
+                    try:
+                        from google import genai
+                        client = genai.Client(api_key=api_key)
+                        
+                        with st.spinner("🔍 AI가 문제를 분석하고 해설을 작성 중입니다..."):
+                            response = client.models.generate_content(
+                                model='gemini-2.5-flash',
+                                contents=[captured_img, user_prompt]
+                            )
+                            st.markdown("### 📝 AI 풀이 결과")
+                            st.write(response.text)
+                    except Exception as e:
+                        st.error(f"오류가 발생했습니다: {e}")
