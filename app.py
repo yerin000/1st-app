@@ -8,7 +8,7 @@ import os
 # 1. 페이지 설정 및 디자인 CSS
 # -----------------------------------------------------------------------------
 st.set_page_config(
-    page_title="공통수학1 - 삼각함수 마스터 LAB",
+    page_title="고등 수학 [대수] - 삼각함수 마스터 LAB",
     page_icon="📐",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -83,7 +83,7 @@ if 'hint_level' not in st.session_state:
 # 3. 사이드바 메뉴 구성
 # -----------------------------------------------------------------------------
 st.sidebar.title("📐 삼각함수 마스터")
-st.sidebar.caption("2022 개정 교육과정 공통수학1")
+st.sidebar.caption("2022 개정 교육과정 [대수]")
 
 menu = st.sidebar.radio(
     "이동할 메뉴를 선택하세요:",
@@ -108,7 +108,7 @@ st.sidebar.write(f"- 오답 노트 항목: **{len(st.session_state.wrong_answers
 # -----------------------------------------------------------------------------
 if menu == "1. 삼각함수 시작하기 🎠":
     st.markdown("<div class='main-header'>🎠 삼각함수, 도대체 왜 배울까?</div>", unsafe_allow_html=True)
-    st.markdown("<div class='sub-header'>일상 속의 '반복되는 회전 운동'에서 시작하는 삼각함수 개념</div>", unsafe_allow_html=True)
+    st.markdown("<div class='sub-header'>일상 속의 '반복되는 회전 운동'에서 시작하는 [대수] 삼각함수 개념</div>", unsafe_allow_html=True)
 
     st.markdown("""
     <div class='card'>
@@ -157,7 +157,7 @@ if menu == "1. 삼각함수 시작하기 🎠":
 # MENU 2: 개념 학습
 # -----------------------------------------------------------------------------
 elif menu == "2. 개념 학습 📖":
-    st.markdown("<div class='main-header'>📖 삼각함수 기초 개념 Master</div>", unsafe_allow_html=True)
+    st.markdown("<div class='main-header'>📖 [대수] 삼각함수 기초 개념 Master</div>", unsafe_allow_html=True)
 
     tab1, tab2 = st.tabs(["STEP 1. 각과 호도법 (Radian)", "STEP 2. 단위원과 삼각함수의 정의"])
 
@@ -400,7 +400,7 @@ elif menu == "4. 인터랙티브 그래프 퀴즈 🎯":
 # MENU 5: 문제 풀기 및 단계별 힌트
 # -----------------------------------------------------------------------------
 elif menu == "5. 문제 풀기 📝":
-    st.markdown("<div class='main-header'>📝 삼각함수 단계별 평가 및 문제 풀기</div>", unsafe_allow_html=True)
+    st.markdown("<div class='main-header'>📝 [대수] 삼각함수 단계별 평가 및 문제 풀기</div>", unsafe_allow_html=True)
 
     problems = [
         {
@@ -506,9 +506,8 @@ elif menu == "6. 오답 / 복습 노트 📓":
 # -----------------------------------------------------------------------------
 elif menu == "7. 삼각함수 도우미 🤖":
     st.markdown("<div class='main-header'>🤖 삼각함수 AI 챗봇 & 문제 풀이 도우미</div>", unsafe_allow_html=True)
-    st.caption("공통수학1 삼각함수에 대해 질문하거나, 문제를 직접 찍어서 풀어달라고 해보세요!")
+    st.caption("[대수] 과목의 삼각함수에 대해 질문하거나, 문제를 직접 찍어서 풀어달라고 해보세요!")
 
-    # FAQ 탭과 사진 문제 풀이 탭 나누기
     tab_faq, tab_photo = st.tabs(["💬 개념 질문하기", "📷 문제 사진 찍어 풀기"])
 
     with tab_faq:
